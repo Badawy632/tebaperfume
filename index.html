@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>طيبة للعطور</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --black:#050505;
@@ -14,270 +12,107 @@
   --green:#0f2f26;
   --glass:rgba(0,0,0,0.6);
 }
-
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
-
-body{
-  background:var(--black);
-  color:#fff;
-  overflow-x:hidden;
-  scroll-behavior:smooth;
-}
+body{background:var(--black);color:#fff;overflow-x:hidden;scroll-behavior:smooth;}
 
 /* ================= HEADER ================= */
-header{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:var(--glass);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--gold);
-  z-index:999;
-}
-
-.header-container{
-  max-width:1200px;
-  margin:auto;
-  padding:15px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.logo{
-  color:var(--gold);
-  font-size:26px;
-  font-weight:900;
-}
-
-nav a{
-  color:#fff;
-  margin:0 15px;
-  text-decoration:none;
-  position:relative;
-}
-
-nav a::after{
-  content:'';
-  position:absolute;
-  width:0;
-  height:2px;
-  background:var(--gold);
-  bottom:-6px;
-  right:0;
-  transition:.4s;
-}
+header{position:fixed;top:0;width:100%;background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--gold);z-index:999;}
+.header-container{max-width:1200px;margin:auto;padding:15px;display:flex;align-items:center;justify-content:space-between;}
+.logo{color:var(--gold);font-size:26px;font-weight:900;}
+nav a{color:#fff;margin:0 15px;text-decoration:none;position:relative;}
+nav a::after{content:'';position:absolute;width:0;height:2px;background:var(--gold);bottom:-6px;right:0;transition:.4s;}
 nav a:hover::after{width:100%;}
 
 /* ================= CART BUTTON ================= */
-.cart-btn{
-  position:relative;
-  background:none;
-  border:1px solid var(--gold);
-  color:var(--gold);
-  padding:8px 18px;
-  border-radius:30px;
-  cursor:pointer;
-  font-weight:600;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.cart-count{
-  background:var(--gold);
-  color:#000;
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:700;
-}
+.cart-btn{position:relative;background:none;border:1px solid var(--gold);color:var(--gold);padding:8px 18px;border-radius:30px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:8px;}
+.cart-count{background:var(--gold);color:#000;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
 
 /* ================= HERO ================= */
-.hero{
-  height:100vh;
-  background:
-    linear-gradient(to bottom,rgba(0,0,0,.7),rgba(0,0,0,.9)),
-    url('https://images.unsplash.com/photo-1615634260167-c8cdede054de');
-  background-size:cover;
-  background-position:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
-
-.hero h1{
-  font-size:50px;
-  color:var(--gold);
-  opacity:0;
-  transform:translateY(40px);
-}
-.hero p{
-  margin:20px 0;
-  font-size:20px;
-  opacity:0;
-  transform:translateY(40px);
-}
-.hero button{
-  background:var(--gold);
-  border:none;
-  padding:15px 40px;
-  font-size:18px;
-  cursor:pointer;
-  border-radius:40px;
-  animation:pulse 2s infinite;
-}
+.hero{height:100vh;background:linear-gradient(to bottom,rgba(0,0,0,.7),rgba(0,0,0,.9)),url('https://images.unsplash.com/photo-1615634260167-c8cdede054de');background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;text-align:center;}
+.hero h1{font-size:50px;color:var(--gold);opacity:0;transform:translateY(40px);}
+.hero p{margin:20px 0;font-size:20px;opacity:0;transform:translateY(40px);}
+.hero button{background:var(--gold);border:none;padding:15px 40px;font-size:18px;cursor:pointer;border-radius:40px;animation:pulse 2s infinite;}
 
 /* ================= ANIMATIONS ================= */
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(224,178,82,.6);}
-  70%{box-shadow:0 0 0 20px rgba(224,178,82,0);}
-  100%{box-shadow:0 0 0 0 rgba(224,178,82,0);}
-}
-
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(224,178,82,.6);}70%{box-shadow:0 0 0 20px rgba(224,178,82,0);}100%{box-shadow:0 0 0 0 rgba(224,178,82,0);}}
 section{padding:90px 20px;}
-
-.section-title{
-  text-align:center;
-  font-size:36px;
-  color:var(--gold);
-  margin-bottom:50px;
-}
+.section-title{text-align:center;font-size:36px;color:var(--gold);margin-bottom:50px;}
 
 /* ================= WHY ================= */
-.features{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:25px;
-  max-width:1200px;
-  margin:auto;
-}
-.feature{
-  background:var(--green);
-  padding:30px;
-  text-align:center;
-  border-radius:15px;
-  opacity:0;
-  transform:translateY(40px);
-  transition:.7s;
-}
-.feature:hover{
-  transform:translateY(-10px) scale(1.03);
-  box-shadow:0 0 25px rgba(224,178,82,.4);
-}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;max-width:1200px;margin:auto;}
+.feature{background:var(--green);padding:30px;text-align:center;border-radius:15px;opacity:0;transform:translateY(40px);transition:.7s;}
+.feature:hover{transform:translateY(-10px) scale(1.03);box-shadow:0 0 25px rgba(224,178,82,.4);}
+
+/* ================= FILTER ================= */
+.filter-bar{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:40px;}
+.filter-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;border-radius:30px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:15px;font-weight:600;transition:.3s;}
+.filter-btn:hover,.filter-btn.active{background:var(--gold);color:#000;}
 
 /* ================= PRODUCTS ================= */
-.products{
-  max-width:1200px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:25px;
-}
-.product{
-  background:#0b0b0b;
-  border-radius:15px;
-  padding:20px;
-  text-align:center;
-  opacity:0;
-  transform:translateY(40px);
-  transition:.6s;
-}
-.product:hover{
-  transform:translateY(-10px) scale(1.02);
-  box-shadow:0 0 25px rgba(224,178,82,.5);
-}
-.product img{
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  border-radius:12px;
-}
-.product h3{color:var(--gold);margin:15px 0;}
-.product select,.product button{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-}
-.product button{background:var(--gold);cursor:pointer}
+.products{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;}
+.product{background:#0b0b0b;border-radius:15px;padding:20px;text-align:center;opacity:0;transform:translateY(40px);transition:.6s;}
+.product.visible{opacity:1;transform:translateY(0);}
+.product.hidden{display:none;}
+.product:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 0 25px rgba(224,178,82,.5);}
+.product img{width:100%;height:260px;object-fit:cover;border-radius:12px;}
+.product h3{color:var(--gold);margin:15px 0 5px;font-size:16px;}
+.product .en-name{color:#aaa;font-size:13px;margin-bottom:10px;}
+.product .category-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;margin-bottom:10px;font-weight:600;}
+.badge-men{background:rgba(15,47,38,.8);color:#4ecb71;border:1px solid #4ecb71;}
+.badge-women{background:rgba(80,20,60,.8);color:#e584c4;border:1px solid #e584c4;}
+.badge-unisex{background:rgba(60,50,10,.8);color:var(--gold);border:1px solid var(--gold);}
+.badge-oud{background:rgba(60,30,0,.8);color:#d4845a;border:1px solid #d4845a;}
+.product .price-tag{color:#fff;font-size:14px;margin-bottom:8px;}
+.product .price-tag span{color:var(--gold);font-weight:700;}
+.product select,.product button{width:100%;margin-top:10px;padding:10px;border-radius:10px;border:none;font-family:'Cairo',sans-serif;}
+.product select{background:#1a1a1a;color:#fff;cursor:pointer;}
+.product button{background:var(--gold);cursor:pointer;font-weight:600;font-size:15px;}
+.product button:hover{background:#f0c862;}
+
+/* ================= VIEW ALL BUTTON ================= */
+.view-all-wrap{text-align:center;margin-top:40px;}
+.view-all-btn{background:transparent;border:2px solid var(--gold);color:var(--gold);padding:14px 45px;border-radius:40px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:17px;font-weight:700;transition:.3s;}
+.view-all-btn:hover{background:var(--gold);color:#000;}
+
+/* ================= STATS ================= */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:25px;max-width:900px;margin:auto;text-align:center;}
+.stat{padding:30px;border:1px solid rgba(224,178,82,.3);border-radius:15px;background:rgba(224,178,82,.05);}
+.stat .num{font-size:42px;font-weight:900;color:var(--gold);}
+.stat p{color:#aaa;margin-top:5px;}
+
+/* ================= TESTIMONIALS ================= */
+.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;max-width:1100px;margin:auto;}
+.testimonial{background:#0d0d0d;border:1px solid rgba(224,178,82,.2);border-radius:15px;padding:25px;}
+.testimonial .stars{color:var(--gold);font-size:18px;margin-bottom:10px;}
+.testimonial p{color:#ccc;line-height:1.8;}
+.testimonial .author{margin-top:15px;color:var(--gold);font-weight:600;}
 
 /* ================= CART OVERLAY ================= */
-.cart-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.9);
-  z-index:3000;
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-.cart-popup{
-  background:#0a0a0a;
-  padding:30px;
-  border-radius:20px;
-  width:90%;
-  max-width:500px;
-}
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:3000;display:none;justify-content:center;align-items:center;}
+.cart-popup{background:#0a0a0a;padding:30px;border-radius:20px;width:90%;max-width:500px;border:1px solid rgba(224,178,82,.3);}
 .cart-popup h2{color:var(--gold);margin-bottom:15px;}
-.cart-popup textarea{
-  width:100%;
-  padding:15px;
-  margin-top:10px;
-  border-radius:10px;
-}
-.cart-popup button{
-  width:100%;
-  margin-top:10px;
-  padding:15px;
-  background:var(--gold);
-  border:none;
-  cursor:pointer;
-}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #222;}
+.cart-item span{color:#fff;}
+.cart-item button{background:none;border:none;color:#e55;cursor:pointer;font-size:16px;}
+.cart-total{color:var(--gold);font-weight:700;font-size:18px;margin:15px 0;}
+.cart-popup textarea{width:100%;padding:15px;margin-top:10px;border-radius:10px;background:#111;border:1px solid #333;color:#fff;font-family:'Cairo',sans-serif;resize:none;height:80px;}
+.cart-popup button{width:100%;margin-top:10px;padding:15px;background:var(--gold);border:none;cursor:pointer;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;font-size:16px;}
+.cart-empty{color:#777;text-align:center;padding:20px;}
 
 /* ================= CONTACT ================= */
-.contact{
-  max-width:600px;
-  margin:auto;
-  text-align:center;
-}
-.contact a{
-  display:inline-block;
-  margin-top:20px;
-  padding:12px 30px;
-  border:1px solid var(--gold);
-  border-radius:30px;
-  color:var(--gold);
-  text-decoration:none;
-  font-weight:600;
-}
+.contact{max-width:600px;margin:auto;text-align:center;}
+.contact p{color:#ccc;font-size:17px;line-height:1.8;margin-bottom:10px;}
+.contact a{display:inline-block;margin-top:20px;padding:12px 30px;border:1px solid var(--gold);border-radius:30px;color:var(--gold);text-decoration:none;font-weight:600;margin:10px;}
+.contact a:hover{background:var(--gold);color:#000;}
 
 /* ================= FOOTER ================= */
-footer{
-  background:#000;
-  padding:20px;
-  text-align:center;
-  color:#aaa;
-}
-
-footer a{
-  color:var(--gold);
-  text-decoration:none;
-}
+footer{background:#000;padding:20px;text-align:center;color:#aaa;}
+footer a{color:var(--gold);text-decoration:none;}
 
 /* ================= MEDIA ================= */
-@media(max-width:768px){
-  .hero h1{font-size:34px;}
-  nav{display:none;}
-}
+@media(max-width:768px){.hero h1{font-size:34px;}nav{display:none;}.filter-btn{padding:8px 16px;font-size:13px;}}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -293,98 +128,339 @@ footer a{
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <div>
-    <h1>عطور طيبة… فخامة تدوم</h1>
-    <p>عطور ثابتة، خامات عالية، وأسعار تنافسية</p>
+    <h1 style="opacity:1;transform:translateY(0);">عطور طيبة… فخامة تدوم</h1>
+    <p style="opacity:1;transform:translateY(0);">عطور ثابتة، خامات عالية، وأسعار تنافسية</p>
     <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">استكشف العطور</button>
   </div>
 </section>
 
+<!-- WHY -->
 <section>
   <h2 class="section-title">لماذا طيبة؟</h2>
   <div class="features">
-    <div class="feature">جودة عالية</div>
-    <div class="feature">ثبات قوي</div>
-    <div class="feature">خامات أصلية</div>
-    <div class="feature">صناعة مصرية فاخرة</div>
+    <div class="feature" style="opacity:1;transform:translateY(0);">
+      <div style="font-size:36px;margin-bottom:10px;">💎</div>
+      <h3 style="color:var(--gold);margin-bottom:8px;">جودة عالية</h3>
+      <p style="color:#aaa;">خامات مختارة بعناية فائقة</p>
+    </div>
+    <div class="feature" style="opacity:1;transform:translateY(0);">
+      <div style="font-size:36px;margin-bottom:10px;">⏳</div>
+      <h3 style="color:var(--gold);margin-bottom:8px;">ثبات قوي</h3>
+      <p style="color:#aaa;">عطر يدوم معك طوال اليوم</p>
+    </div>
+    <div class="feature" style="opacity:1;transform:translateY(0);">
+      <div style="font-size:36px;margin-bottom:10px;">🌿</div>
+      <h3 style="color:var(--gold);margin-bottom:8px;">خامات أصلية</h3>
+      <p style="color:#aaa;">مكونات طبيعية 100% معتمدة</p>
+    </div>
+    <div class="feature" style="opacity:1;transform:translateY(0);">
+      <div style="font-size:36px;margin-bottom:10px;">🏆</div>
+      <h3 style="color:var(--gold);margin-bottom:8px;">صناعة مصرية فاخرة</h3>
+      <p style="color:#aaa;">فخر الصناعة المحلية بمعايير عالمية</p>
+    </div>
   </div>
 </section>
 
+<!-- STATS -->
+<section style="padding:40px 20px;">
+  <div class="stats">
+    <div class="stat"><div class="num">+75</div><p>عطر متاح</p></div>
+    <div class="stat"><div class="num">+5000</div><p>عميل سعيد</p></div>
+    <div class="stat"><div class="num">100%</div><p>خامات أصلية</p></div>
+    <div class="stat"><div class="num">24H</div><p>توصيل سريع</p></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
 <section id="products">
   <h2 class="section-title">عطور طيبة</h2>
-  <div class="products">
-    <div class="product"><img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3"><h3>طيبة رويال</h3><select><option>30 مل - 500ج</option><option>50 مل - 750ج</option></select><button onclick="addToCart('طيبة رويال')">أضف للسلة</button></div>
-    <div class="product"><img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3"><h3>طيبة عود</h3><select><option>30 مل - 550ج</option><option>50 مل - 800ج</option></select><button onclick="addToCart('طيبة عود')">أضف للسلة</button></div>
-    <div class="product"><img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3"><h3>طيبة بلاك</h3><select><option>30 مل - 480ج</option><option>50 مل - 720ج</option></select><button onclick="addToCart('طيبة بلاك')">أضف للسلة</button></div>
+
+  <!-- FILTER -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProducts('all',this)">الكل</button>
+    <button class="filter-btn" onclick="filterProducts('men',this)">🧔 رجالي</button>
+    <button class="filter-btn" onclick="filterProducts('women',this)">👩 نسائي</button>
+    <button class="filter-btn" onclick="filterProducts('unisex',this)">✨ مشترك</button>
+    <button class="filter-btn" onclick="filterProducts('oud',this)">🪵 عود / مسك</button>
+  </div>
+
+  <div class="products" id="productsGrid"></div>
+  <div class="view-all-wrap" id="viewAllWrap">
+    <button class="view-all-btn" onclick="showAll()">عرض كل العطور ▼</button>
   </div>
 </section>
 
-<section>
-  <h2 class="section-title">عطور عالمية</h2>
-  <div class="products">
-    <div class="product"><img src="https://images.unsplash.com/photo-1610465299120-dc4b94e8d96b"><h3>Dior Sauvage</h3><button onclick="addToCart('Dior Sauvage')">أضف للسلة</button></div>
-    <div class="product"><img src="https://images.unsplash.com/photo-1587017539504-67cfbddac569"><h3>Bleu de Chanel</h3><button onclick="addToCart('Bleu de Chanel')">أضف للسلة</button></div>
-    <div class="product"><img src="https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c"><h3>YSL Y</h3><button onclick="addToCart('YSL Y')">أضف للسلة</button></div>
+<!-- TESTIMONIALS -->
+<section id="about">
+  <h2 class="section-title">عن طيبة</h2>
+  <div class="testimonials">
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <p>عطور طيبة من أفضل ما جربته، الثبات خرافي والسعر معقول جداً. بنصح بيها لكل حد</p>
+      <div class="author">— أحمد من القاهرة</div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <p>اشتريت مسك طيبة وعود أبيض وفضلوا معايا طول اليوم. جودة ممتازة وخدمة رائعة</p>
+      <div class="author">— سارة من الإسكندرية</div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <p>التوصيل كان سريع جداً والتغليف أنيق. العطر وصلني سليم وريحته تجنن</p>
+      <div class="author">— محمود من الجيزة</div>
+    </div>
   </div>
 </section>
 
+<!-- CONTACT -->
 <section id="contact">
   <h2 class="section-title">تواصل معنا</h2>
   <div class="contact">
-    <a href="https://www.instagram.com/teba_perfumes" target="_blank">Instagram</a>
+    <p>نحن هنا لخدمتك في أي وقت<br>تواصل معنا عبر واتساب أو انستجرام</p>
+    <a href="https://wa.me/201550222800" target="_blank">📱 واتساب</a>
+    <a href="https://www.instagram.com/teba_perfumes" target="_blank">📸 Instagram</a>
   </div>
 </section>
 
 <footer>
-  © 2024 طيبة للعطور
+  © 2024 طيبة للعطور — جميع الحقوق محفوظة
   <br>
-  <a href="https://www.instagram.com/youssef_badawy632/" target="_blank">BY YOUSSEF BADAWY </a>
+  <a href="https://www.instagram.com/youssef_badawy632/" target="_blank">BY YOUSSEF BADAWY</a>
 </footer>
 
+<!-- CART OVERLAY -->
 <div class="cart-overlay" id="cartOverlay">
   <div class="cart-popup">
     <h2>🛒 سلة طيبة</h2>
     <div id="cartItems"></div>
-    <textarea id="address" placeholder="اكتب العنوان كامل"></textarea>
-    <button onclick="sendWhats()">إتمام الطلب</button>
-    <button onclick="closeCart()" style="background:#333;color:#fff">إغلاق</button>
+    <div class="cart-total" id="cartTotal" style="display:none;"></div>
+    <textarea id="address" placeholder="اكتب العنوان كامل هنا..."></textarea>
+    <button onclick="sendWhats()" style="background:var(--gold);color:#000;">✅ إتمام الطلب عبر واتساب</button>
+    <button onclick="closeCart()" style="background:#222;color:#fff;margin-top:8px;">✕ إغلاق</button>
   </div>
 </div>
 
 <script>
-let cart=[];
+// ============ DATA ============
+const products = [
+  // رجالي
+  {name:'اربا بورا',en:'ERBA PURA',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'سترونجر وذ يو',en:'Stronger With You',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'سترونج مي',en:'Strong Me',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مضاوي',en:'MADAWY',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مضاوي جولد',en:'MADAWY GOLD',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'الكسندريا ٢',en:'ALEXANDRIA 2',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'بي ام دبليو',en:'BMW',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ديور سوفاج',en:'Sauvage Dior',cat:'men',img:'https://images.unsplash.com/photo-1610465299120-dc4b94e8d96b'},
+  {name:'سوفاج اليكسير',en:'Sauvage Elixir',cat:'men',img:'https://images.unsplash.com/photo-1610465299120-dc4b94e8d96b'},
+  {name:'وان مليون لاكي',en:'One Million Lucky',cat:'men',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'وان مليون اليكسير',en:'One Million Elixir',cat:'men',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'جولد',en:'Gold',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'توباكو فانيليا',en:'Tobacco Vanilla',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'اربيان توباكو',en:'Arabian Tobacco',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ازاررو ونتيدد',en:'Wanted Azzaro',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'سبايس بومب اكستريم',en:'Spicebomb Extreme',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'انفيكتوس',en:'Invictus',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'انفيكتوس اليكسير',en:'Invictus Elixir',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مرسيدس',en:'MERCEDES',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ميجامار',en:'MEGAMARE',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ذارا فور هيم',en:'ZARA FOR HIM',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ذارا جولد',en:'ZARA GOLD',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ذارا',en:'ZARA',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ماجنيتك',en:'Magnetic',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'بوص ذا سنت ماجنيتك',en:'Boss The Scent Magnetic',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'بوص بوتلد',en:'Boss Bottled',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'بوص بوتلد ابسلو',en:'Boss Bottled Absolu',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'بوص بوتلد عود',en:'Boss Bottled Oud',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'ديور هوم انتنس',en:'Dior Homme Intense',cat:'men',img:'https://images.unsplash.com/photo-1610465299120-dc4b94e8d96b'},
+  {name:'لوميل اليكسير',en:'Le Male Elixir',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'الترا مل',en:'Ultra Male',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'الترا مارن',en:'Ultra Marine',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'هوجو',en:'HUGO',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'هوجو بوص',en:'HUGO BOSS',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'سكلبتشر',en:'Sculpture',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'اسنشيال',en:'Essential',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'شيروتي',en:'Men Cerruti',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'هاسيفات نيشان',en:'Hacivat Nishane',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'نيشان',en:'Nishane',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'سلفر سنت',en:'Silver Cent',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'هج سنت',en:'HUG Cent',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'انا الابيض',en:'Ana Al Abyad',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'كريزي لااف',en:'Crazy Love',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'اكوا دي جيو',en:'Aqua di Gio',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مونت بلانك',en:'Mont Blanc',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مون بلو',en:'Moon Blue',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مون بلو ليجيند',en:'Moon Blue Legend',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'جيمي شو',en:'Game Show',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'وان مان شو',en:'One Man Show',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'كاريزما',en:'Charisma',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'سيجار',en:'Cigarette',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'تشيلز رجالي',en:'Chills M',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'كروم ليجند',en:'Chrome Legend',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'تومي',en:'Tommy',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'٤٠ عقدة',en:'40 Knots',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'بلاك افغانو',en:'Black Afghano',cat:'men',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
 
-function openCart(){document.getElementById('cartOverlay').style.display='flex'}
-function closeCart(){document.getElementById('cartOverlay').style.display='none'}
+  // نسائي
+  {name:'جود جيرل',en:'Good Girl',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'سكاندال باي نايت',en:'Scandal By Night',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'سي ارماني',en:'Si Armani',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'سي فيوري',en:'Si Fiery',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'سي ريد',en:'Si Red',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'اوليمبيا',en:'Olympea',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'فيري سيكسي ناو',en:'Very Sexy Now',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'جادور',en:'J Adore',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'كاسيليا',en:'Caselia',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'لافي بيل',en:'La Vie Belle',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'لوست شيري',en:'Lost Cherry',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'بينك شوجر',en:'Pink Sugar',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'ماي واي',en:'My Way',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'بيربري هير',en:'Burberry Her',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'بيربري بدي',en:'Burberry Body',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'تندر',en:'Tender',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'فيكتوريا سيكريت',en:'Victoria Secret',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'بيانكو لاتيه',en:'Bianco Latte',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'ديلينا دي مارلي',en:'Delina De Marly',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'بيلي ايليش',en:'Billie Eilish',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'فانتازيا',en:'Fantasia',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
+  {name:'تشيلز نسائي',en:'Chills W',cat:'women',img:'https://images.unsplash.com/photo-1600093463592-2e8d1f5f7c6c'},
 
-function addToCart(name){
-  cart.push(name);
-  document.getElementById('cartCount').innerText=cart.length;
+  // مشترك
+  {name:'وصال',en:'Wesal',cat:'unisex',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'خُمرة',en:'KHAMRAH',cat:'unisex',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'خُمرة قهوة',en:'KHAMRAH Coffee',cat:'unisex',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'خُمرة دخان',en:'KHAMRAH DUKHAN',cat:'unisex',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'يارا',en:'YARA',cat:'unisex',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+  {name:'يارا كاندي',en:'YARA Candy',cat:'unisex',img:'https://images.unsplash.com/photo-1587017539504-67cfbddac569'},
+
+  // عود / مسك
+  {name:'عود أبيض',en:'OUD White',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك أبيض',en:'White Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك طيبة',en:'Taybah Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك بكرات روج',en:'Musk Rouge',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك رمان',en:'Pomegranate Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك فراولة',en:'Strawberry Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك قهوة',en:'Coffee Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك توت',en:'Berry Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك فانيليا',en:'Vanilla Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك بودر',en:'Powder Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك انجليزي',en:'English Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'مسك طهارة',en:'Purity Musk',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'عود كلمات',en:'Oud Kalimat',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+  {name:'عود بوكية',en:'Oud Bouquet',cat:'oud',img:'https://images.unsplash.com/photo-1547887537-6158d64c35b3'},
+];
+
+const BADGE = {men:'badge-men',women:'badge-women',unisex:'badge-unisex',oud:'badge-oud'};
+const BADGE_LABEL = {men:'رجالي',women:'نسائي',unisex:'مشترك',oud:'عود / مسك'};
+const SHOW_INIT = 10;
+let currentFilter = 'all';
+let showingAll = false;
+
+function buildCard(p){
+  return `
+    <div class="product visible" data-cat="${p.cat}">
+      <img src="${p.img}" loading="lazy" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p class="en-name">${p.en}</p>
+      <span class="category-badge ${BADGE[p.cat]}">${BADGE_LABEL[p.cat]}</span>
+      <p class="price-tag">30مل = <span>100ج</span> &nbsp;|&nbsp; 50مل = <span>150ج</span></p>
+      <select>
+        <option value="30ml">30 مل - 100 جنيه</option>
+        <option value="50ml">50 مل - 150 جنيه</option>
+      </select>
+      <button onclick="addToCart('${p.name}',this)">🛒 أضف للسلة</button>
+    </div>`;
+}
+
+function renderProducts(){
+  const grid = document.getElementById('productsGrid');
+  const wrap = document.getElementById('viewAllWrap');
+  let filtered = currentFilter === 'all' ? products : products.filter(p => p.cat === currentFilter);
+  grid.innerHTML = filtered.map(buildCard).join('');
+
+  if(!showingAll && filtered.length > SHOW_INIT){
+    const cards = grid.querySelectorAll('.product');
+    cards.forEach((c,i) => { if(i >= SHOW_INIT) c.style.display = 'none'; });
+    wrap.style.display = 'block';
+    wrap.querySelector('button').textContent = `عرض كل العطور (${filtered.length}) ▼`;
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
+function filterProducts(cat, btn){
+  currentFilter = cat;
+  showingAll = false;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts();
+}
+
+function showAll(){
+  showingAll = true;
+  document.querySelectorAll('#productsGrid .product').forEach(c => c.style.display = '');
+  document.getElementById('viewAllWrap').style.display = 'none';
+}
+
+// ============ CART ============
+let cart = [];
+
+function openCart(){ document.getElementById('cartOverlay').style.display = 'flex'; }
+function closeCart(){ document.getElementById('cartOverlay').style.display = 'none'; }
+
+function addToCart(name, btn){
+  const sel = btn.closest('.product').querySelector('select');
+  const size = sel ? sel.options[sel.selectedIndex].text : '';
+  cart.push({name, size});
+  document.getElementById('cartCount').innerText = cart.length;
+  renderCart();
+  // mini feedback
+  btn.textContent = '✅ تمت الإضافة';
+  setTimeout(() => btn.textContent = '🛒 أضف للسلة', 1500);
+}
+
+function removeFromCart(i){
+  cart.splice(i,1);
+  document.getElementById('cartCount').innerText = cart.length;
   renderCart();
 }
 
 function renderCart(){
-  let box=document.getElementById('cartItems');
-  box.innerHTML='';
-  cart.forEach(i=>box.innerHTML+=`<p>• ${i}</p>`);
+  const box = document.getElementById('cartItems');
+  const total = document.getElementById('cartTotal');
+  if(cart.length === 0){
+    box.innerHTML = '<p class="cart-empty">السلة فارغة</p>';
+    total.style.display = 'none';
+    return;
+  }
+  let totalPrice = 0;
+  box.innerHTML = cart.map((item,i) => {
+    const price = item.size.includes('30') ? 100 : 150;
+    totalPrice += price;
+    return `<div class="cart-item">
+      <span>${item.name} — ${item.size}</span>
+      <button onclick="removeFromCart(${i})">✕</button>
+    </div>`;
+  }).join('');
+  total.style.display = 'block';
+  total.innerHTML = `الإجمالي: <span>${totalPrice} جنيه</span>`;
 }
 
 function sendWhats(){
-  let msg='طلب من طيبة للعطور:%0A'+cart.join('%0A')+'%0Aالعنوان:%0A'+document.getElementById('address').value;
+  if(cart.length === 0){ alert('السلة فارغة!'); return; }
+  const addr = document.getElementById('address').value;
+  if(!addr.trim()){ alert('من فضلك اكتب العنوان'); return; }
+  let msg = 'طلب جديد من طيبة للعطور:%0A%0A';
+  cart.forEach(item => msg += `• ${item.name} — ${item.size}%0A`);
+  msg += `%0Aالعنوان:%0A${addr}`;
   window.open('https://wa.me/201550222800?text='+msg);
 }
 
-/* scroll animation */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting){
-      setTimeout(()=>{e.target.style.opacity=1;e.target.style.transform='translateY(0)'},i*150);
-    }
-  });
-},{threshold:.2});
-document.querySelectorAll('.feature,.product,.hero h1,.hero p').forEach(el=>obs.observe(el));
+// init
+renderProducts();
 </script>
-
 </body>
 </html>
