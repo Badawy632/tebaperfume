@@ -74,7 +74,16 @@ section{padding:80px 20px;}
 .cart-popup textarea{width:100%;padding:15px;margin-top:8px;border-radius:10px;background:#111;border:1px solid #333;color:#fff;font-family:'Cairo',sans-serif;resize:none;height:80px;font-size:14px;}
 .btn-whats{width:100%;margin-top:10px;padding:15px;background:#25d366;border:none;cursor:pointer;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;font-size:16px;color:#fff;}
 .btn-close{width:100%;margin-top:8px;padding:12px;background:#1a1a1a;border:none;cursor:pointer;border-radius:10px;font-family:'Cairo',sans-serif;color:#aaa;font-size:15px;}
-.cart-empty{color:#666;text-align:center;padding:30px;font-size:16px;}
+.cart-popup .order-form input,.cart-popup .order-form textarea{width:100%;padding:12px 15px;margin-top:8px;border-radius:10px;background:#111;border:1px solid #333;color:#fff;font-family:'Cairo',sans-serif;font-size:14px;}
+.cart-popup .order-form textarea{resize:none;height:75px;}
+.cart-popup .order-form input:focus,.cart-popup .order-form textarea:focus{outline:none;border-color:var(--gold);}
+.success-screen{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;gap:16px;}
+.success-screen h2{color:var(--gold);font-size:24px;}
+.success-screen p{color:#ccc;line-height:1.8;font-size:16px;}
+.success-circle{margin-bottom:10px;}
+@keyframes ringAnim{to{stroke-dashoffset:0;}}
+@keyframes checkAnim{to{stroke-dashoffset:0;}}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
 .contact{max-width:600px;margin:auto;text-align:center;}
 .contact p{color:#ccc;font-size:17px;line-height:1.8;margin-bottom:15px;}
 .contact a{display:inline-block;margin:8px;padding:13px 32px;border:1px solid var(--gold);border-radius:30px;color:var(--gold);text-decoration:none;font-weight:600;transition:.3s;}
@@ -165,13 +174,28 @@ footer a{color:var(--gold);text-decoration:none;}
 </footer>
 
 <div class="cart-overlay" id="cartOverlay">
-  <div class="cart-popup">
+  <div class="cart-popup" id="cartPopup">
     <h2>🛒 سلة طيبة</h2>
     <div id="cartItems"></div>
     <div class="cart-total" id="cartTotal" style="display:none;"></div>
-    <textarea id="address" placeholder="اكتب العنوان كامل هنا..."></textarea>
-    <button class="btn-whats" onclick="sendWhats()">✅ إتمام الطلب عبر واتساب</button>
+    <div class="order-form">
+      <input id="custName" type="text" placeholder="👤 اسمك كامل" />
+      <input id="custPhone" type="tel" placeholder="📞 رقم موبايلك" />
+      <textarea id="address" placeholder="📍 عنوانك كامل..."></textarea>
+    </div>
+    <button class="btn-whats" onclick="sendOrder()">✅ إتمام الطلب</button>
     <button class="btn-close" onclick="closeCart()">✕ إغلاق</button>
+  </div>
+  <div class="success-screen" id="successScreen">
+    <div class="success-circle">
+      <svg viewBox="0 0 100 100" width="120" height="120">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#e0b252" stroke-width="5" stroke-dasharray="276" stroke-dashoffset="276" id="successRing"/>
+        <polyline points="28,52 44,68 72,32" fill="none" stroke="#e0b252" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="80" stroke-dashoffset="80" id="checkMark"/>
+      </svg>
+    </div>
+    <h2>تم استلام طلبك! 🎉</h2>
+    <p>سنتصل بك قريباً<br>شكراً لاختيارك <strong style="color:var(--gold)">طيبة للعطور</strong></p>
+    <button class="btn-close" style="margin-top:20px;width:auto;padding:12px 40px;border-radius:30px;" onclick="closeCart()">حسناً ✓</button>
   </div>
 </div>
 
@@ -365,8 +389,21 @@ document.querySelectorAll('.features').forEach(el => featureObs.observe(el));
 
 // CART
 let cart=[];
-function openCart(){document.getElementById('cartOverlay').style.display='flex';}
-function closeCart(){document.getElementById('cartOverlay').style.display='none';}
+function openCart(){
+  document.getElementById('cartPopup').style.display='block';
+  document.getElementById('successScreen').style.display='none';
+  document.getElementById('cartOverlay').style.display='flex';
+}
+function closeCart(){
+  document.getElementById('cartOverlay').style.display='none';
+  document.getElementById('cartPopup').style.display='block';
+  document.getElementById('successScreen').style.display='none';
+  // reset ring/check animations
+  const ring=document.getElementById('successRing');
+  const check=document.getElementById('checkMark');
+  ring.style.animation='none'; ring.style.strokeDashoffset='276';
+  check.style.animation='none'; check.style.strokeDashoffset='80';
+}
 
 function addToCart(name,btn){
   const sel=btn.closest('.product').querySelector('select');
@@ -394,15 +431,47 @@ function renderCart(){
   tot.innerHTML=`الإجمالي: ${total} جنيه`;
 }
 
-function sendWhats(){
+function sendOrder(){
   if(!cart.length){alert('السلة فارغة!');return;}
-  const addr=document.getElementById('address').value;
-  if(!addr.trim()){alert('من فضلك اكتب العنوان');return;}
+  const name=document.getElementById('custName').value.trim();
+  const phone=document.getElementById('custPhone').value.trim();
+  const addr=document.getElementById('address').value.trim();
+  if(!name){alert('من فضلك اكتب اسمك');return;}
+  if(!phone){alert('من فضلك اكتب رقم موبايلك');return;}
+  if(!addr){alert('من فضلك اكتب عنوانك');return;}
   let total=cart.reduce((s,i)=>s+i.price,0);
-  let msg='طلب جديد من طيبة للعطور:%0A%0A';
-  cart.forEach(i=>msg+=`• ${i.name} — ${i.size} — ${i.price} جنيه%0A`);
-  msg+=`%0Aالإجمالي: ${total} جنيه%0A%0Aالعنوان:%0A${encodeURIComponent(addr)}`;
-  window.open('https://wa.me/2001202297700?text='+msg);
+  let msg='🛍 *طلب جديد - طيبة للعطور*\n\n';
+  msg+=`👤 *الاسم:* ${name}\n`;
+  msg+=`📞 *الموبايل:* ${phone}\n`;
+  msg+=`📍 *العنوان:* ${addr}\n\n`;
+  msg+='🧴 *المنتجات:*\n';
+  cart.forEach(i=>msg+=`• ${i.name} — ${i.size} — ${i.price} جنيه\n`);
+  msg+=`\n💰 *الإجمالي: ${total} جنيه*`;
+  const TOKEN='7703206746:AAG-4E6O2A4ATPu9lpQh1C1RfYbXok6NqBk';
+  const CHAT_ID='1118704634';
+  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})
+  }).then(()=>showSuccess()).catch(()=>showSuccess());
+}
+
+function showSuccess(){
+  document.getElementById('cartPopup').style.display='none';
+  const ss=document.getElementById('successScreen');
+  ss.style.display='flex';
+  const ring=document.getElementById('successRing');
+  const check=document.getElementById('checkMark');
+  // animate ring then checkmark
+  ring.style.animation='ringAnim 0.7s ease forwards';
+  setTimeout(()=>{check.style.animation='checkAnim 0.5s ease forwards';},700);
+  // reset cart
+  cart=[];
+  document.getElementById('cartCount').innerText=0;
+  renderCart();
+  document.getElementById('custName').value='';
+  document.getElementById('custPhone').value='';
+  document.getElementById('address').value='';
 }
 </script>
 </body>
