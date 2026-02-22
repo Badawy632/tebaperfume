@@ -137,6 +137,10 @@ footer a{color:var(--gold);text-decoration:none;}
 
 <section id="products">
   <h2 class="section-title">عطور طيبة</h2>
+  <div style="max-width:500px;margin:0 auto 25px;padding:0 15px;">
+    <input type="text" id="searchInput" placeholder="🔍 ابحث عن عطر..." oninput="searchProducts(this.value)"
+      style="width:100%;padding:13px 20px;border-radius:30px;border:1px solid var(--gold);background:rgba(255,255,255,0.05);color:#fff;font-family:'Cairo',sans-serif;font-size:15px;outline:none;" />
+  </div>
   <div class="filter-bar">
     <button class="filter-btn active" onclick="filterProducts('all',this)">الكل</button>
     <button class="filter-btn" onclick="filterProducts('men',this)">🧔 رجالي</button>
@@ -179,6 +183,12 @@ footer a{color:var(--gold);text-decoration:none;}
     <div id="cartItems"></div>
     <div class="cart-total" id="cartTotal" style="display:none;"></div>
     <div class="order-form">
+      <!-- PROMO CODE -->
+      <div style="display:flex;gap:8px;margin-bottom:4px;">
+        <input id="promoInput" type="text" placeholder="🎟️ كود الخصم (اختياري)" style="flex:1;" />
+        <button onclick="applyPromo()" style="background:var(--gold);border:none;padding:0 16px;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;font-size:13px;">تطبيق</button>
+      </div>
+      <p id="promoMsg" style="font-size:12px;margin-bottom:8px;min-height:16px;"></p>
       <input id="custName" type="text" placeholder="👤 اسمك كامل" />
       <input id="custPhone" type="tel" placeholder="📞 رقم موبايلك" />
       <textarea id="address" placeholder="📍 عنوانك كامل..."></textarea>
@@ -418,17 +428,72 @@ function addToCart(name,btn){
 
 function removeFromCart(i){cart.splice(i,1);document.getElementById('cartCount').innerText=cart.length;renderCart();}
 
+let promoApplied = false;
+const PROMO_CODES = { 'TEBA20': 20 };
+
+function applyPromo(){
+  const code = document.getElementById('promoInput').value.trim().toUpperCase();
+  const msg = document.getElementById('promoMsg');
+  if(PROMO_CODES[code]){
+    promoApplied = code;
+    msg.textContent = '✅ تم تطبيق خصم ' + PROMO_CODES[code] + '% 🎉';
+    msg.style.color = 'var(--green)';
+  } else {
+    promoApplied = false;
+    msg.textContent = '❌ كود خاطئ';
+    msg.style.color = 'var(--red)';
+  }
+  renderCart();
+}
+
+function fuzzyMatch(text, query){
+  if(!text || !query) return false;
+  text = text.toLowerCase();
+  query = query.toLowerCase();
+  let ti = 0, qi = 0;
+  while(ti < text.length && qi < query.length){
+    if(text[ti] === query[qi]) qi++;
+    ti++;
+  }
+  return qi === query.length;
+}
+
+function searchProducts(q){
+  currentFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  if(!q.trim()){ filteredList = products; }
+  else {
+    filteredList = products.filter(p =>
+      fuzzyMatch(p.name, q) ||
+      fuzzyMatch(p.en || '', q) ||
+      fuzzyMatch(p.desc || '', q) ||
+      (p.name||'').includes(q) ||
+      (p.en||'').toLowerCase().includes(q.toLowerCase())
+    );
+  }
+  visibleCount = LOAD_SIZE;
+  renderProducts();
+}
+
 function renderCart(){
-  const box=document.getElementById('cartItems');
-  const tot=document.getElementById('cartTotal');
-  if(!cart.length){box.innerHTML='<p class="cart-empty">السلة فارغة 🛒</p>';tot.style.display='none';return;}
-  let total=0;
-  box.innerHTML=cart.map((item,i)=>{
-    total+=item.price;
+  const box = document.getElementById('cartItems');
+  const tot = document.getElementById('cartTotal');
+  if(!cart.length){ box.innerHTML='<p class="cart-empty">السلة فارغة 🛒</p>'; tot.style.display='none'; return; }
+  let subtotal = 0;
+  box.innerHTML = cart.map((item,i) => {
+    subtotal += item.price;
     return `<div class="cart-item"><span>${item.name} — ${item.size}</span><span class="price-tag">${item.price} ج</span><button class="rm-btn" onclick="removeFromCart(${i})">✕</button></div>`;
   }).join('');
-  tot.style.display='block';
-  tot.innerHTML=`الإجمالي: ${total} جنيه`;
+  tot.style.display = 'block';
+  if(promoApplied && PROMO_CODES[promoApplied]){
+    const disc = PROMO_CODES[promoApplied];
+    const discAmt = Math.round(subtotal * disc / 100);
+    const final = subtotal - discAmt;
+    tot.innerHTML = `<span style="color:#888;text-decoration:line-through;font-size:14px;">الإجمالي: ${subtotal} جنيه</span><br>خصم ${disc}%: <span style="color:var(--green)">- ${discAmt} جنيه</span><br><strong style="font-size:18px;">الإجمالي بعد الخصم: ${final} جنيه</strong>`;
+  } else {
+    tot.innerHTML = `الإجمالي: ${subtotal} جنيه`;
+  }
 }
 
 function sendOrder(){
@@ -439,19 +504,24 @@ function sendOrder(){
   if(!name){alert('من فضلك اكتب اسمك');return;}
   if(!phone){alert('من فضلك اكتب رقم موبايلك');return;}
   if(!addr){alert('من فضلك اكتب عنوانك');return;}
-  let total=cart.reduce((s,i)=>s+i.price,0);
+  let subtotal=cart.reduce((s,i)=>s+i.price,0);
+  let discAmt=0, finalTotal=subtotal;
+  if(promoApplied && PROMO_CODES[promoApplied]){
+    discAmt=Math.round(subtotal*PROMO_CODES[promoApplied]/100);
+    finalTotal=subtotal-discAmt;
+  }
   let msg='🛍 *طلب جديد - طيبة للعطور*\n\n';
   msg+=`👤 *الاسم:* ${name}\n`;
   msg+=`📞 *الموبايل:* ${phone}\n`;
   msg+=`📍 *العنوان:* ${addr}\n\n`;
   msg+='🧴 *المنتجات:*\n';
   cart.forEach(i=>msg+=`• ${i.name} — ${i.size} — ${i.price} جنيه\n`);
-  msg+=`\n💰 *الإجمالي: ${total} جنيه*`;
+  if(promoApplied){ msg+=`\n🎟️ *كود الخصم:* ${promoApplied} (-${PROMO_CODES[promoApplied]}%)\n💸 *الخصم:* ${discAmt} جنيه\n`; }
+  msg+=`\n💰 *الإجمالي${promoApplied?' بعد الخصم':''}:* ${finalTotal} جنيه`;
   const TOKEN='7703206746:AAG-4E6O2A4ATPu9lpQh1C1RfYbXok6NqBk';
   const CHAT_ID='1118704634';
   fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
+    method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})
   }).then(()=>showSuccess()).catch(()=>showSuccess());
 }
@@ -476,4 +546,3 @@ function showSuccess(){
 </script>
 </body>
 </html>
-
