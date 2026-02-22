@@ -247,6 +247,7 @@ body{background:var(--black);color:#fff;min-height:100vh;}
       <button class="tab active" onclick="switchTab('products',this)">🧴 إدارة العطور</button>
       <button class="tab" onclick="switchTab('settings',this)">⚙️ الإعدادات</button>
       <button class="tab" onclick="switchTab('publish',this)">🚀 نشر التعديلات</button>
+      <button class="tab" onclick="switchTab('guide',this)">📖 إرشادات الموقع</button>
     </div>
 
     <!-- PRODUCTS PANEL -->
@@ -320,6 +321,59 @@ body{background:var(--black);color:#fff;min-height:100vh;}
         <button class="save-btn" style="margin-top:0;" onclick="publishToGitHub()">🚀 نشر التعديلات الآن</button>
       </div>
     </div>
+
+    <!-- GUIDE PANEL -->
+    <div class="panel" id="panel-guide">
+      <div class="setting-card" style="max-width:700px;margin:auto;">
+        <h4>📖 إزاي تربط موقعك بالداش بورد؟</h4>
+        <p style="color:#888;font-size:14px;line-height:2;margin:15px 0;">
+          الداش بورد بيحدث موقعك بشكل ذكي — بيقرأ الملف من GitHub وبيبدل البيانات بس
+          من غير ما يمسح باقي الكود. علشان ده يشتغل، محتاج تضيف سطرين جوه الـ <code style="color:var(--gold)">index.html</code> بتاع موقعك:
+        </p>
+
+        <div style="background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:20px;margin:15px 0;text-align:left;direction:ltr;">
+          <p style="color:#555;font-size:12px;margin-bottom:10px;"><!-- أضف الكودين دول في الـ &lt;head&gt; بتاع موقعك --></p>
+          <pre style="color:var(--gold);font-size:13px;white-space:pre-wrap;margin:0;">
+&lt;!-- DASHBOARD:DATA:START --&gt;
+&lt;script id="dashboard-data"&gt;
+window.SITE_CONFIG = {
+  price30: 200, price50: 350, price100: 650,
+  whatsNum: '2001202297700',
+  instaLink: 'https://www.instagram.com/teba_perfumes',
+  tgChat: '1118704634',
+  productImg: '',
+  products: []
+};
+&lt;/script&gt;
+&lt;!-- DASHBOARD:DATA:END --&gt;</pre>
+        </div>
+
+        <p style="color:#888;font-size:14px;line-height:2;">
+          بعد ما تضيفهم، موقعك هيستخدم <code style="color:var(--gold)">window.SITE_CONFIG</code> للبيانات.
+          في موقعك بدل ما تكتب البيانات hard-coded، اكتب كود زي ده:
+        </p>
+
+        <div style="background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:20px;margin:15px 0;text-align:left;direction:ltr;">
+          <pre style="color:#7ec8e3;font-size:13px;white-space:pre-wrap;margin:0;">
+const cfg = window.SITE_CONFIG;
+const products = cfg.products;
+const whatsNum = cfg.whatsNum;
+// ... إلخ</pre>
+        </div>
+
+        <div style="background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.3);border-radius:12px;padding:16px;margin-top:15px;">
+          <p style="color:var(--green);font-size:14px;font-weight:700;">✅ خطوات سريعة:</p>
+          <p style="color:#888;font-size:13px;line-height:2;margin-top:8px;">
+            1️⃣ افتح <code>index.html</code> بتاع موقعك<br>
+            2️⃣ في أول الـ <code>&lt;head&gt;</code>، حط الكود الأصفر اللي فوق<br>
+            3️⃣ موقعك يستخدم <code>window.SITE_CONFIG</code> للبيانات<br>
+            4️⃣ ارفع التغيير على GitHub<br>
+            5️⃣ دلوقتي الداش بورد يقدر يحدث البيانات أوتوماتيك! 🎉
+          </p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -672,21 +726,43 @@ function saveProductImg(){
 
 // ===== PUBLISH TO GITHUB =====
 async function publishToGitHub(){
-  showSaving('جاري بناء الملف ونشره...');
+  showSaving('جاري قراءة الموقع من GitHub...');
 
   try {
-    // 1. Get current file SHA
+    // 1. Get current file SHA + content
     const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
       headers: { Authorization: `token ${GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
     });
+
+    if(!fileRes.ok){
+      const e = await fileRes.json();
+      hideSaving();
+      showToast('❌ مقدرش أقرأ الملف: ' + (e.message||fileRes.status), true);
+      return;
+    }
+
     const fileData = await fileRes.json();
     const sha = fileData.sha;
 
-    // 2. Build new HTML content
-    const newContent = buildHTML();
+    // 2. Decode current site HTML
+    const currentHTML = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g,''))));
+
+    showSaving('جاري تحديث البيانات...');
+
+    // 3. Patch the HTML - inject products + settings between markers
+    const newContent = patchSiteHTML(currentHTML);
+
+    if(!newContent){
+      hideSaving();
+      showToast('❌ مش لاقي markers في الموقع — شوف الإرشادات في تاب "إرشادات الموقع"', true);
+      return;
+    }
+
+    // 4. Encode and push
     const encoded = btoa(unescape(encodeURIComponent(newContent)));
 
-    // 3. Push to GitHub
+    showSaving('جاري رفع التحديث على GitHub...');
+
     const pushRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
       method: 'PUT',
       headers: {
@@ -695,7 +771,7 @@ async function publishToGitHub(){
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        message: '🔄 Update from Taybah Dashboard',
+        message: '🔄 Update from Taybah Dashboard - ' + new Date().toISOString(),
         content: encoded,
         sha: sha
       })
@@ -704,55 +780,48 @@ async function publishToGitHub(){
     hideSaving();
     if(pushRes.ok){
       showToast('🚀 تم النشر على GitHub بنجاح!');
-      document.getElementById('publishStatus').innerHTML = `<span style="color:var(--green)">✅ آخر نشر: ${new Date().toLocaleString('ar-EG')}</span>`;
+      document.getElementById('publishStatus').innerHTML =
+        `<span style="color:var(--green)">✅ آخر نشر: ${new Date().toLocaleString('ar-EG')}</span>`;
     } else {
       const err = await pushRes.json();
       showToast('❌ فشل النشر: ' + (err.message||''), true);
     }
   } catch(e){
     hideSaving();
-    showToast('❌ خطأ في الاتصال بـ GitHub', true);
+    showToast('❌ خطأ: ' + e.message, true);
+    console.error(e);
   }
 }
 
-function buildHTML(){
-  const p30 = settings.price30 || 200;
-  const p50 = settings.price50 || 350;
-  const p100 = settings.price100 || 650;
-  const whats = settings.whatsNum || '2001202297700';
-  const insta = settings.instaLink || '';
-  const tgChat = settings.tgChat || '1118704634';
-  const prodImg = settings.productImg || '';
+// Patches the site HTML by replacing content between DASHBOARD markers
+function patchSiteHTML(html){
+  const START = '<!-- DASHBOARD:DATA:START -->';
+  const END   = '<!-- DASHBOARD:DATA:END -->';
 
-  const productsJS = JSON.stringify(products);
+  const si = html.indexOf(START);
+  const ei = html.indexOf(END);
 
-  // Read the current site template and inject new data
-  return `<!-- TAYBAH PERFUMES - Auto generated by Dashboard -->
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>طيبة للعطور</title>
-<script>
-  // Dashboard settings injected
-  window.SITE_CONFIG = {
-    price30: ${p30}, price50: ${p50}, price100: ${p100},
-    whatsNum: '${whats}', instaLink: '${insta}', tgChat: '${tgChat}',
-    productImg: '${prodImg}',
-    products: ${productsJS}
+  if(si === -1 || ei === -1) return null; // markers not found
+
+  const injection = buildDataBlock();
+  return html.substring(0, si + START.length) + '\n' + injection + '\n' + html.substring(ei);
+}
+
+// Builds the JS data block to inject into the site
+function buildDataBlock(){
+  const cfg = {
+    price30:    settings.price30  || 200,
+    price50:    settings.price50  || 350,
+    price100:   settings.price100 || 650,
+    whatsNum:   settings.whatsNum  || '2001202297700',
+    instaLink:  settings.instaLink || '',
+    tgChat:     settings.tgChat    || '1118704634',
+    productImg: settings.productImg|| '',
+    products:   products
   };
-<\/script>
-</head>
-<body>
-<script>
-  // Redirect to main site with config
-  const cfg = window.SITE_CONFIG;
-  document.write('<p style="font-family:Cairo;text-align:center;margin-top:50px;color:#e0b252;">جاري التحميل...</p>');
-  setTimeout(()=>{ location.href = 'site.html'; }, 500);
-<\/script>
-</body>
-</html>`;
+  return `<script id="dashboard-data">
+window.SITE_CONFIG = ${JSON.stringify(cfg, null, 2)};
+<\/script>`;
 }
 
 // ===== HELPERS =====
