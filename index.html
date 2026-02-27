@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>طيبة للعطور</title>
@@ -183,17 +186,13 @@ footer a{color:var(--gold);text-decoration:none;}
     <div id="cartItems"></div>
     <div class="cart-total" id="cartTotal" style="display:none;"></div>
     <div class="order-form">
-      <!-- PROMO CODE -->
-      <div style="display:flex;gap:8px;margin-bottom:4px;">
-        <input id="promoInput" type="text" placeholder="🎟️ كود الخصم (اختياري)" style="flex:1;" />
-        <button onclick="applyPromo()" style="background:var(--gold);border:none;padding:0 16px;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;font-size:13px;">تطبيق</button>
-      </div>
-      <p id="promoMsg" style="font-size:12px;margin-bottom:8px;min-height:16px;"></p>
-      <input id="custName" type="text" placeholder="👤 اسمك كامل" />
-      <input id="custPhone" type="tel" placeholder="📞 رقم موبايلك" />
-      <textarea id="address" placeholder="📍 عنوانك كامل..."></textarea>
+      <!-- OFFER / PROMO DYNAMIC -->
+      <div id="offerBox"></div>
+      <input id="custName" type="text" placeholder="👤 اسمك كامل" oninput="checkForm()" />
+      <input id="custPhone" type="tel" placeholder="📞 رقم موبايلك" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,11);checkForm()" />
+      <textarea id="address" placeholder="📍 عنوانك كامل..." oninput="checkForm()"></textarea>
     </div>
-    <button class="btn-whats" onclick="sendOrder()">✅ إتمام الطلب</button>
+    <button class="btn-whats" id="orderBtn" onclick="sendOrder()" disabled style="opacity:0.4;cursor:not-allowed;">✅ إتمام الطلب</button>
     <button class="btn-close" onclick="closeCart()">✕ إغلاق</button>
   </div>
   <div class="success-screen" id="successScreen">
@@ -434,7 +433,12 @@ const PROMO_CODES = { 'TEBA20': 20 };
 function applyPromo(){
   const code = document.getElementById('promoInput').value.trim().toUpperCase();
   const msg = document.getElementById('promoMsg');
-  if(PROMO_CODES[code]){
+  if(code === 'BUY2GET1'){
+    if(cart.length < 2){ msg.textContent='❌ لازم تضيف 2 منتجات على الأقل'; msg.style.color='var(--red)'; return; }
+    promoApplied = 'BUY2GET1';
+    msg.textContent = '✅ تم تطبيق عرض Buy 2 Get 1! 🎁';
+    msg.style.color = 'var(--green)';
+  } else if(PROMO_CODES[code]){
     promoApplied = code;
     msg.textContent = '✅ تم تطبيق خصم ' + PROMO_CODES[code] + '% 🎉';
     msg.style.color = 'var(--green)';
@@ -479,14 +483,43 @@ function searchProducts(q){
 function renderCart(){
   const box = document.getElementById('cartItems');
   const tot = document.getElementById('cartTotal');
-  if(!cart.length){ box.innerHTML='<p class="cart-empty">السلة فارغة 🛒</p>'; tot.style.display='none'; return; }
+  const offerBox = document.getElementById('offerBox');
+  if(!cart.length){
+    box.innerHTML='<p class="cart-empty">السلة فارغة 🛒</p>';
+    tot.style.display='none';
+    offerBox.innerHTML='';
+    return;
+  }
   let subtotal = 0;
   box.innerHTML = cart.map((item,i) => {
     subtotal += item.price;
     return `<div class="cart-item"><span>${item.name} — ${item.size}</span><span class="price-tag">${item.price} ج</span><button class="rm-btn" onclick="removeFromCart(${i})">✕</button></div>`;
   }).join('');
   tot.style.display = 'block';
-  if(promoApplied && PROMO_CODES[promoApplied]){
+
+  // Dynamic offer box
+  if(cart.length >= 2){
+    promoApplied = false; // disable promo for 2+
+    offerBox.innerHTML = `
+      <div style="background:rgba(224,178,82,0.12);border:2px solid rgba(224,178,82,0.5);border-radius:14px;padding:14px 18px;margin-bottom:12px;text-align:center;">
+        <p style="color:var(--gold);font-weight:900;font-size:17px;margin-bottom:8px;">🎁 اشتري 2 واحصل على 1 مجاناً!</p>
+        <input id="giftInput" type="text" placeholder="✍️ اكتب نوع العطر اللي عاوزه هدية..." 
+          style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(224,178,82,0.4);background:#111;color:#fff;font-family:'Cairo',sans-serif;font-size:14px;text-align:center;" 
+          oninput="checkForm()"/>
+      </div>`;
+  } else {
+    offerBox.innerHTML = `
+      <div style="margin-bottom:4px;">
+        <div style="display:flex;gap:8px;margin-bottom:4px;">
+          <input id="promoInput" type="text" placeholder="🎟️ كود الخصم (اختياري)" style="flex:1;" oninput="checkForm()"/>
+          <button onclick="applyPromo()" style="background:var(--gold);border:none;padding:0 16px;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;font-size:13px;">تطبيق</button>
+        </div>
+        <p id="promoMsg" style="font-size:12px;margin-bottom:8px;min-height:16px;"></p>
+      </div>`;
+  }
+  if(cart.length >= 2){
+    tot.innerHTML = `<span style="color:#888;font-size:13px;">الإجمالي: ${subtotal} جنيه</span><br><span style="color:#2ecc71;font-size:13px;">🎁 + هدية مجانية</span>`;
+  } else if(promoApplied && PROMO_CODES[promoApplied]){
     const disc = PROMO_CODES[promoApplied];
     const discAmt = Math.round(subtotal * disc / 100);
     const final = subtotal - discAmt;
@@ -496,6 +529,20 @@ function renderCart(){
   }
 }
 
+function checkForm(){
+  var name=(document.getElementById('custName')||{value:''}).value.trim();
+  var phone=(document.getElementById('custPhone')||{value:''}).value.trim();
+  var addr=(document.getElementById('address')||{value:''}).value.trim();
+  var btn=document.getElementById('orderBtn');
+  var giftOk = true;
+  if(cart.length >= 2){
+    var giftEl=document.getElementById('giftInput');
+    giftOk = giftEl && giftEl.value.trim().length > 0;
+  }
+  var ok = name.length>0 && phone.length===11 && addr.length>0 && giftOk;
+  if(btn){ btn.disabled = !ok; btn.style.opacity = ok?'1':'0.4'; btn.style.cursor = ok?'pointer':'not-allowed'; }
+}
+
 function sendOrder(){
   if(!cart.length){alert('السلة فارغة!');return;}
   const name=document.getElementById('custName').value.trim();
@@ -503,10 +550,16 @@ function sendOrder(){
   const addr=document.getElementById('address').value.trim();
   if(!name){alert('من فضلك اكتب اسمك');return;}
   if(!phone){alert('من فضلك اكتب رقم موبايلك');return;}
+  if(phone.length!==11){alert('رقم الموبايل لازم يكون 11 رقم');return;}
   if(!addr){alert('من فضلك اكتب عنوانك');return;}
   let subtotal=cart.reduce((s,i)=>s+i.price,0);
   let discAmt=0, finalTotal=subtotal;
-  if(promoApplied && PROMO_CODES[promoApplied]){
+  let giftChoice='';
+  if(cart.length >= 2){
+    // free gift offer
+    const giftInput = document.getElementById('giftInput');
+    giftChoice = giftInput ? giftInput.value.trim() : '';
+  } else if(promoApplied && PROMO_CODES[promoApplied]){
     discAmt=Math.round(subtotal*PROMO_CODES[promoApplied]/100);
     finalTotal=subtotal-discAmt;
   }
@@ -516,8 +569,13 @@ function sendOrder(){
   msg+=`📍 *العنوان:* ${addr}\n\n`;
   msg+='🧴 *المنتجات:*\n';
   cart.forEach(i=>msg+=`• ${i.name} — ${i.size} — ${i.price} جنيه\n`);
-  if(promoApplied){ msg+=`\n🎟️ *كود الخصم:* ${promoApplied} (-${PROMO_CODES[promoApplied]}%)\n💸 *الخصم:* ${discAmt} جنيه\n`; }
-  msg+=`\n💰 *الإجمالي${promoApplied?' بعد الخصم':''}:* ${finalTotal} جنيه`;
+  if(cart.length >= 2){
+    msg+=`\n🎁 *عرض الهدية المجانية*\n`;
+    if(giftChoice) msg+=`🎀 *العطر المطلوب هدية:* ${giftChoice}\n`;
+  } else if(promoApplied && PROMO_CODES[promoApplied]){
+    msg+=`\n🎟️ *كود الخصم:* ${promoApplied} (-${PROMO_CODES[promoApplied]}%)\n💸 *الخصم:* ${discAmt} جنيه\n`;
+  }
+  msg+=`\n💰 *الإجمالي:* ${finalTotal} جنيه`;
   const TOKEN='7703206746:AAG-4E6O2A4ATPu9lpQh1C1RfYbXok6NqBk';
   const CHAT_ID='1118704634';
   fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
